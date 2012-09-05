@@ -2,6 +2,7 @@ package org.magic.ftp.command;
 
 import java.util.LinkedHashMap;
 
+import org.apache.mina.core.session.IoSession;
 import org.magic.ftp.exception.CommandNotFoundException;
 import org.magic.ftp.protocal.FTPResponse;
 
@@ -32,7 +33,7 @@ public abstract class Command {
 		
 	}
 	
-	public abstract FTPResponse execute(String parameter);
+	public abstract FTPResponse execute(String parameter, IoSession session);
 	
 	public static final String CRLF = "\r\n";
 	public static final String SP = " ";

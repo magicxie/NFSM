@@ -7,16 +7,30 @@ import org.apache.mina.core.session.IoSession;
 
 public class FTPDataHandler implements IoHandler {
 
+	private int linkId;
+	
+	public FTPDataHandler(int linkId) {
+		this.linkId = linkId;
+	}
+	
 	@Override
 	public void sessionCreated(IoSession session) throws Exception {
-		// TODO Auto-generated method stub
-		
+		System.out.println("sessionCreated");
+
 	}
 
 	@Override
 	public void sessionOpened(IoSession session) throws Exception {
-		// TODO Auto-generated method stub
-		session.getCreationTime();
+		System.out.println("sessionOpened");
+		while(true){
+			if(Main.sessionShareLink.containsKey(linkId)){
+				System.out.println("OY : " + linkId);
+				byte[] data = Main.sessionShareLink.get(linkId);
+				session.write(IoBuffer.wrap(data));
+				Main.sessionShareLink.remove(linkId);
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -42,10 +56,7 @@ public class FTPDataHandler implements IoHandler {
 	@Override
 	public void messageReceived(IoSession session, Object message)
 			throws Exception {
-		int limit = ((IoBuffer)  message).limit();
-		byte[] dst = new byte[limit];
-		((IoBuffer)  message).get(dst, 0, limit);
-		System.out.println(new String(dst));
+		
 
 	}
 

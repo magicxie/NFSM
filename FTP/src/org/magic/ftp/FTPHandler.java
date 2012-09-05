@@ -25,13 +25,13 @@ public class FTPHandler implements IoHandler {
 	public void messageReceived(IoSession session, Object message) throws Exception {
 
 		FTPRequest request = (FTPRequest) message;
-		FTPResponse response = request.getCommand().execute(request.getParameter());
+		FTPResponse response = request.getCommand().execute(request.getParameter(), session);
 		session.write(response);
 	}
 
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception {
-		
+		session.removeAttribute("CMD");
 	}
 
 	@Override

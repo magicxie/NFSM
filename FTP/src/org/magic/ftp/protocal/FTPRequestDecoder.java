@@ -18,14 +18,20 @@ public class FTPRequestDecoder extends CumulativeProtocolDecoder {
 		String commandLine = new String(dst);
 		//...
 		if(commandLine.endsWith(Command.CRLF)){
-			
+			commandLine = session.getAttribute("CMD") == null ? commandLine :  session.getAttribute("CMD") + commandLine;
 			String[] cap = commandLine.replace(Command.CRLF, "").split(" ", 2);
 			Command cmd = Command.get(cap[0].toUpperCase());
 			
 			out.write(new FTPRequest(cmd, cap.length > 1 ? cap[1] : ""));
-			
+			session.removeAttribute("CMD");
 			return true;
 		}else{
+			String oldValue = (String) session.getAttribute("CMD");
+			if(oldValue == null){
+				session.setAttribute("CMD", commandLine);
+			}else{
+				session.replaceAttribute("CMD", oldValue, oldValue + commandLine);
+			}
 			return false;
 		}
 
